@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
+    "outDir": "./dist/",
+    "module": "es6",
     "target": "es5",
-    "outDir": "./dist",
-    "watch": true
+    "jsx": "react",
+    "allowJs": true,
+    "sourceMap": true,
   }
 }
