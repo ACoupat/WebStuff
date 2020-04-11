@@ -1,3 +1,9 @@
 {
-    "typescript.validate.enable": true,
+    "liveServer.settings.https": {
+        "enable": true, //set it true to enable the feature.  
+        "cert": "D:/certs/www.monsite.fr.crt", //full path of the certificate  
+        "key": "D:/certs/www.monsite.fr.key", //full path of the private key  
+        "passphrase": "monsite"
+    },
+    "liveServer.settings.host": "localhost"
 }

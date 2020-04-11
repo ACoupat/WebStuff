@@ -1,0 +1,167 @@
+Exporter version: 6.3.1, Blender version: 2.80 (sub 75)
+========= Conversion from Blender to Babylon.js =========
+	Scene settings used :
+		Inline textures     :  true
+		Material Type       :  PBR
+		Positions Precision :  4
+		Normals Precision   :  3
+		UVs Precision       :  3
+		Vert Color Precision:  3
+		Mat Weight Precision:  2
+		Keep Z-up r-handed  :  no
+	Python World class constructor completed
+	WARNING: No active camera has been assigned, or is not in a currently selected Blender layer
+	processing begun of mesh:  Ground
+		processing begun of material:  Ground
+		processing begun of material:  house_ground
+			processing texture tex_grass_low
+				texture type:  diffuseTexture, mapped using: "UVMap"
+			processing texture tex_concrete
+				texture type:  diffuseTexture, mapped using: "UVMap"
+		processing begun of multimaterial:  scene.Multimaterial#0
+		num positions      :  104
+		num normals        :  104
+		num tangents       :  0
+		num uvs            :  208
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  120
+	processing begun of mesh:  Plane.001
+		processing begun of material:  house_ground
+		registered as also a user of material:  house_ground
+		num positions      :  250
+		num normals        :  250
+		num tangents       :  0
+		num uvs            :  500
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  396
+	processing begun of mesh:  Plane.002
+		processing begun of material:  Roof
+		num positions      :  20
+		num normals        :  20
+		num tangents       :  0
+		num uvs            :  40
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  24
+	processing begun of mesh:  Cylinder
+		processing begun of material:  Crate2
+			processing texture tex_crate
+				texture type:  diffuseTexture, mapped using: "UVMap"
+		num positions      :  309
+		num normals        :  309
+		num tangents       :  0
+		num uvs            :  618
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  372
+	processing begun of mesh:  Cylinder.001
+		processing begun of material:  Crate2
+		registered as also a user of material:  Crate2
+		num positions      :  309
+		num normals        :  309
+		num tangents       :  0
+		num uvs            :  618
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  372
+	processing begun of mesh:  Plane.003
+		processing begun of material:  house_ground
+		registered as also a user of material:  house_ground
+		num positions      :  4
+		num normals        :  4
+		num tangents       :  0
+		num uvs            :  8
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  6
+	processing begun of mesh:  Cube
+		processing begun of material:  small_cubes
+		num positions      :  29
+		num normals        :  29
+		num tangents       :  0
+		num uvs            :  58
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  36
+	processing begun of mesh:  Cube.001
+		processing begun of material:  small_cubes
+		registered as also a user of material:  small_cubes
+		num positions      :  29
+		num normals        :  29
+		num tangents       :  0
+		num uvs            :  58
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  36
+	processing begun of mesh:  Cube.002
+		processing begun of material:  small_cubes
+		registered as also a user of material:  small_cubes
+		num positions      :  29
+		num normals        :  29
+		num tangents       :  0
+		num uvs            :  58
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  36
+	processing begun of mesh:  Cube.003
+		processing begun of material:  small_cubes
+		registered as also a user of material:  small_cubes
+		num positions      :  29
+		num normals        :  29
+		num tangents       :  0
+		num uvs            :  58
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  36
+	processing begun of mesh:  Cube.004
+		processing begun of material:  small_cubes
+		registered as also a user of material:  small_cubes
+		num positions      :  29
+		num normals        :  29
+		num tangents       :  0
+		num uvs            :  58
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  36
+	processing begun of mesh:  Cube.005
+		processing begun of material:  Crate2
+		registered as also a user of material:  Crate2
+		num positions      :  29
+		num normals        :  29
+		num tangents       :  0
+		num uvs            :  58
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  36
+	processing begun of mesh:  Cube.006
+		processing begun of material:  Walls
+			processing texture tex_walls_low
+				texture type:  diffuseTexture, mapped using: "UVMap"
+		num positions      :  180
+		num normals        :  180
+		num tangents       :  0
+		num uvs            :  360
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  252
+	processing begun of light (POINT):  Light
+	processing begun of light (DIRECTIONAL):  Sun
+========= Writing of JSON file started =========
+	writing mesh:  Ground
+	writing mesh:  Plane.001
+	writing mesh:  Plane.002
+	writing mesh:  Cylinder
+	writing mesh:  Cylinder.001
+	writing mesh:  Plane.003
+	writing mesh:  Cube
+	writing mesh:  Cube.001
+	writing mesh:  Cube.002
+	writing mesh:  Cube.003
+	writing mesh:  Cube.004
+	writing mesh:  Cube.005
+	writing mesh:  Cube.006
+========= Writing of JSON file completed =========
+========= end of processing =========
+elapsed time:  0 min, 0.2024 secs

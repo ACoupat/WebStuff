@@ -153,7 +153,7 @@ SceneLoader.Load("", "3D_model/export/scene.babylon", engine, async (scene) => {
 
   });
 
-  window.addEventListener("resize", () => {
-    engine.resize();
-  });
+  // window.addEventListener("resize", () => {
+  //   engine.resize();
+  // });
 });
