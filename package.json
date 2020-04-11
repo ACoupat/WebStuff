@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/DarkMowah/WebStuff#readme",
   "devDependencies": {
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.1"
   }
 }
