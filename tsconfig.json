@@ -6,11 +6,11 @@
     "sourceMap": true,
     "noImplicitAny": false,
     "strict": true,
+    "moduleResolution": "node",
     // "lib":["es2015"],
     "types": [
       "babylonjs",
-      // "babylonjs-gui",
-      // "babylonjs-materials"
+      "rxjs"
     ],
   },
   // "include": [""],

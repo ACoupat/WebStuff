@@ -1,4 +1,9 @@
-import { Scene, WebXRDefaultExperience, AnimatedInputBlockTypes, WebXRInputSource } from "babylonjs";
+import { Scene, WebXRDefaultExperience, AnimatedInputBlockTypes, WebXRInputSource, ActionManager, ExecuteCodeAction } from "babylonjs";
+import { broadcastTriggerSqueezeEvent } from "./input-event-bus";
+import { get } from "lodash";
+import { Subject } from "rxjs";
+
+export const $handMeshesEventBus : Subject<any> = new Subject();
 
 export class PlayerManager {
 
@@ -9,7 +14,7 @@ export class PlayerManager {
     private rightHand: WebXRInputSource = null as any;
     private leftHand: WebXRInputSource = null as any;
 
-    private constructor(xrHelper: WebXRDefaultExperience) {
+    public init(xrHelper: WebXRDefaultExperience, scene: Scene){
         this.xrHelper = xrHelper;
 
         xrHelper.input.onControllerRemovedObservable.add((inputSource) => {
@@ -38,50 +43,47 @@ export class PlayerManager {
             inputSource.onMotionControllerInitObservable.add((motionController) => {
                 console.log(motionController)
 
-                const componentsIds : string[] = motionController.getComponentIds();
+                const componentsIds: string[] = motionController.getComponentIds();
                 componentsIds.map(componentId => {
 
                     const component = motionController.getComponent(componentId);
 
                     component.onButtonStateChangedObservable.add((componentEvent) => {
-                        // something changed, check the changes object
-                        console.log(componentEvent)
+                        if (componentId === "xr-standard-trigger" || componentId === "xr-standard-squeeze") {
+                            broadcastTriggerSqueezeEvent(componentEvent)
+                        }
                     });
 
                     component.onAxisValueChangedObservable.add((values) => {
-                        console.log(values.x, values.y);
+                        // console.log(values.x, values.y);
                     })
                 })
 
+                motionController.onModelLoadedObservable.add(
+                    eventData => {
+                        if (eventData.rootMesh) {
+                            $handMeshesEventBus.next(eventData.rootMesh)
+                        }
+                    }
+                )
+
             })
-
-            // inputSource.onMotionControllerInitObservable.add((motionController) => {
-            //     motionController.onModelLoadedObservable.add((model) => {
-            //         //     theModels.push(model);
-            //         //     const ids = motionController.getComponentIds();
-            //         //     console.log(ids)
-
-            //         //     triggerComponent = motionController.getComponent("xr-standard-trigger");
-            //         //     if (triggerComponent) {
-            //         //       // found, do something with it.
-            //         //       console.log("found trigger :)")
-            //         //     }
-
-            //         //     squeezeComponent = motionController.getComponent("xr-standard-squeeze");
-            //         //     if (squeezeComponent) {
-            //         //       // found, do something with it.
-            //         //       console.log("found squeeze :)")
-            //         //     }
-            //     });
-            // });
         });
-
-
-
     }
 
-    public static getInstance(xrHelper: WebXRDefaultExperience) {
-        return this.instance || new PlayerManager(xrHelper)
+    public subscribeToHandMeshes(callback){
+        $handMeshesEventBus.subscribe(callback)
+    }
+
+    public static getInstance() {
+        return this.instance || new PlayerManager();
+    }
+
+    public get rightHandMesh() {
+        return get(this.rightHand, 'motionController.rootMesh')
+    }
+    public get leftHandMesh() {
+        return get(this.leftHand, 'motionController.rootMesh')
     }
 
     public update() {

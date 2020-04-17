@@ -2,13 +2,12 @@ import * as _ from 'lodash';
 import './style.scss'
 import { Color3, Quaternion, Vector3, ArcRotateCamera, Engine, SceneLoader, MeshBuilder, StandardMaterial, CubeTexture, Texture, Mesh, AbstractMesh } from 'babylonjs'
 import { PlayerManager } from './player-manager/player-manager';
+import { subscribeToTriggerSqueezeEvent } from './player-manager/input-event-bus';
+import { makeGrabbable } from './interactions/grabbable';
 
 const canvas : HTMLCanvasElement = document.getElementById("canvas") as HTMLCanvasElement;
 const engine = new Engine(canvas, true);
 
-let theInputSource;
-let triggerComponent;
-let squeezeComponent;
 const theModels : any[] = [];
 const theMotionControllers : any[] = []
 
@@ -51,65 +50,24 @@ SceneLoader.Load("", "3D_model/export/scene.babylon", engine, async (scene) => {
     console.log(":(")
   } else {
     // all good, ready to go
-    playerManager  = PlayerManager.getInstance(xrHelper);
+    playerManager  = PlayerManager.getInstance();
+    playerManager.init(xrHelper,scene)
+
+    subscribeToTriggerSqueezeEvent(
+      (event) => {
+        console.log("trigger :)")
+      }
+    )
   }
 
   let counter = 0;
-  let handMesh;
-  let triggerPressed = false;
   engine.runRenderLoop(() => {
     scene.render();
     counter++;
 
     if (xrHelper.baseExperience) {
-        playerManager.update()
-    }
-
-    if (theInputSource && theInputSource.motionController) {
-      handMesh = theInputSource.motionController.rootMesh;
-      if (triggerComponent) {
-
-        if (triggerComponent.value > 0.5 && triggerPressed === false) {
-          triggerPressed = true;
-        } else if (triggerComponent.value < 0.5 && triggerPressed === true) {
-          triggerPressed = false;
-        }
-
-        if (handMesh && torusKnot.intersectsMesh(handMesh) && torusKnot.material) {
-          torusKnot.material.diffuseColor = new Color3(0, 1, 0)
-          if (triggerPressed) // trigger click
-          {
-            // console.log(triggerComponent.value)
-            // console.log(theInputSource._tmpQuaternion)
-            // console.log(theInputSource._tmpVector)
-            console.log("trigger intrersect")
-            // torus_knot.rotationQuaternion = theInputSource._tmpQuaternion
-            torusKnot.parent = handMesh
-            torusKnot.position = Vector3.Zero()
-          }
-          else {
-            const newPos = new Vector3(torusKnot.absolutePosition.x, torusKnot.absolutePosition.y, torusKnot.absolutePosition.z);
-            const newRot = new Quaternion()
-            newRot.copyFrom(torusKnot.absoluteRotationQuaternion);
-            console.log("nexPos")
-            console.log(newPos)
-            console.log("newRot")
-            console.log(newRot)
-            torusKnot.parent = null;
-            torusKnot.setAbsolutePosition(newPos);
-            torusKnot.absoluteRotationQuaternion.copyFrom(newRot);
-          }
-          // console.log("torus position")
-          // console.log(torus_knot.position)
-          // console.log("torus rotation")
-          // console.log(torus_knot.absoluteRotationQuaternion)
-
-        } else if(torusKnot.material) {
-          torusKnot.material.diffuseColor = new Color3(0, 0, 1)
-        }
-
-
-      }
+        // playerManager.update()
+        makeGrabbable(torusKnot, scene)
     }
   });
 
