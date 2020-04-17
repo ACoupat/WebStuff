@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import './style.scss'
 import { Color3, Quaternion, Vector3, ArcRotateCamera, Engine, SceneLoader, MeshBuilder, StandardMaterial, CubeTexture, Texture, Mesh, AbstractMesh } from 'babylonjs'
+import { PlayerManager } from './player-manager/player-manager';
 
 const canvas : HTMLCanvasElement = document.getElementById("canvas") as HTMLCanvasElement;
 const engine = new Engine(canvas, true);
@@ -37,46 +38,20 @@ SceneLoader.Load("", "3D_model/export/scene.babylon", engine, async (scene) => {
   myMaterial.diffuseColor = new Color3(1, 0, 1);
   torusKnot.material = myMaterial;
 
-
-  // scene.clearColor = new BABYLON.Color3(1, 1, 1);
-  // scene.ambientColor = new BABYLON.Color3.White;
   scene.createDefaultEnvironment();
-
   const ground : any = scene.getMeshByName("Ground");
   const xRParameters = ground ? { floorMeshes : [ground] } : {};
   const xrHelper = await scene.createDefaultXRExperienceAsync(xRParameters);
 
+  let playerManager : PlayerManager;
+
+  // Trying to set playerManager
   if (!xrHelper.baseExperience) {
     // tslint:disable-next-line: no-console
     console.log(":(")
   } else {
     // all good, ready to go
-    console.log(":)")
-    // Managing controllers buttons
-    xrHelper.input.onControllerAddedObservable.add((inputSource) => {
-      console.log(inputSource)
-      theInputSource = inputSource;
-      inputSource.onMotionControllerInitObservable.add((motionController) => {
-        theMotionControllers.push(motionController)
-        motionController.onModelLoadedObservable.add((model) => {
-          theModels.push(model);
-          const ids = motionController.getComponentIds();
-          console.log(ids)
-
-          triggerComponent = motionController.getComponent("xr-standard-trigger");
-          if (triggerComponent) {
-            // found, do something with it.
-            console.log("found trigger :)")
-          }
-
-          squeezeComponent = motionController.getComponent("xr-standard-squeeze");
-          if (squeezeComponent) {
-            // found, do something with it.
-            console.log("found squeeze :)")
-          }
-        });
-      });
-    });
+    playerManager  = PlayerManager.getInstance(xrHelper);
   }
 
   let counter = 0;
@@ -86,11 +61,10 @@ SceneLoader.Load("", "3D_model/export/scene.babylon", engine, async (scene) => {
     scene.render();
     counter++;
 
-    // if (counter % 10 === 0) {
-    // console.log("trigger : " + triggerComponent.value)
-    // console.log("squeeze : " + squeezeComponent.value)
-    // console.log(theModels)
-    // console.log(theMotionControllers)
+    if (xrHelper.baseExperience) {
+        playerManager.update()
+    }
+
     if (theInputSource && theInputSource.motionController) {
       handMesh = theInputSource.motionController.rootMesh;
       if (triggerComponent) {
@@ -136,21 +110,7 @@ SceneLoader.Load("", "3D_model/export/scene.babylon", engine, async (scene) => {
 
 
       }
-      // console.log("ray : ")
-      // console.log(theInputSource.inputSource.targetRaySpace)
-      // console.log("grip :")
-      // console.log(theInputSource.inputSource.gripSpace)
-      // const resultRay = new Ray();
-
-      // get the pointer direction
-      // theInputSource.getWorldPointerRayToRef(resultRay);
-      // // get the grip direction, if available. If not, the pointer:
-      // // theInputSource.getWorldPointerRayToRef(resultRay, true);
-      // console.log(resultRay)
-      // console.log("le ray")
     }
-    //  }
-
   });
 
   // window.addEventListener("resize", () => {
