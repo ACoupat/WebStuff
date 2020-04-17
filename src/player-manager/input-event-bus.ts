@@ -1,11 +1,24 @@
 import { Subject } from "rxjs"
+import { filter } from "rxjs/operators"
+import { WebXRControllerComponent } from "babylonjs";
 
-const $inputTriggerSqueezeEventBus = new Subject<any>();
+interface XRInputEvent{
+    componentData : WebXRControllerComponent
+    handedness : XRHandedness
+}
 
-export const broadcastTriggerSqueezeEvent = (event) =>  {
+const $inputTriggerSqueezeEventBus = new Subject<XRInputEvent>();
+
+export const broadcastInputEvent = (event : XRInputEvent) =>  {
     $inputTriggerSqueezeEventBus.next(event)
 }
 
-export const subscribeToTriggerSqueezeEvent = (callback) => {
-    $inputTriggerSqueezeEventBus.subscribe(callback)
+export const subscribeToSqueezeEvent = (callback : (event : XRInputEvent) => any ) => {
+    $inputTriggerSqueezeEventBus
+    .pipe(filter(
+        value => {
+            return value.componentData.id === "xr-standard-squeeze"
+        }
+    ))
+    .subscribe(callback)
 }

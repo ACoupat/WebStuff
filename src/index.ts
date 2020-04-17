@@ -2,8 +2,8 @@ import * as _ from 'lodash';
 import './style.scss'
 import { Color3, Quaternion, Vector3, ArcRotateCamera, Engine, SceneLoader, MeshBuilder, StandardMaterial, CubeTexture, Texture, Mesh, AbstractMesh } from 'babylonjs'
 import { PlayerManager } from './player-manager/player-manager';
-import { subscribeToTriggerSqueezeEvent } from './player-manager/input-event-bus';
-import { makeGrabbable } from './interactions/grabbable';
+import { subscribeToSqueezeEvent } from './player-manager/input-event-bus';
+import { GrabbableObject } from './interactions/grabbable';
 
 const canvas : HTMLCanvasElement = document.getElementById("canvas") as HTMLCanvasElement;
 const engine = new Engine(canvas, true);
@@ -37,6 +37,8 @@ SceneLoader.Load("", "3D_model/export/scene.babylon", engine, async (scene) => {
   myMaterial.diffuseColor = new Color3(1, 0, 1);
   torusKnot.material = myMaterial;
 
+  const grabbableTorus = new GrabbableObject(torusKnot, scene)
+
   scene.createDefaultEnvironment();
   const ground : any = scene.getMeshByName("Ground");
   const xRParameters = ground ? { floorMeshes : [ground] } : {};
@@ -53,7 +55,7 @@ SceneLoader.Load("", "3D_model/export/scene.babylon", engine, async (scene) => {
     playerManager  = PlayerManager.getInstance();
     playerManager.init(xrHelper,scene)
 
-    subscribeToTriggerSqueezeEvent(
+    subscribeToSqueezeEvent(
       (event) => {
         console.log("trigger :)")
       }
@@ -65,10 +67,57 @@ SceneLoader.Load("", "3D_model/export/scene.babylon", engine, async (scene) => {
     scene.render();
     counter++;
 
-    if (xrHelper.baseExperience) {
-        // playerManager.update()
-        makeGrabbable(torusKnot, scene)
-    }
+    // if (xrHelper.baseExperience) {
+        
+        
+    // }
+
+    // if (theInputSource && theInputSource.motionController) {
+    //   handMesh = theInputSource.motionController.rootMesh;
+    //   if (triggerComponent) {
+
+    //     if (triggerComponent.value > 0.5 && triggerPressed === false) {
+    //       triggerPressed = true;
+    //     } else if (triggerComponent.value < 0.5 && triggerPressed === true) {
+    //       triggerPressed = false;
+    //     }
+
+    //     if (handMesh && torusKnot.intersectsMesh(handMesh) && torusKnot.material) {
+    //       torusKnot.material.diffuseColor = new Color3(0, 1, 0)
+    //       if (triggerPressed) // trigger click
+    //       {
+    //         // console.log(triggerComponent.value)
+    //         // console.log(theInputSource._tmpQuaternion)
+    //         // console.log(theInputSource._tmpVector)
+    //         console.log("trigger intrersect")
+    //         // torus_knot.rotationQuaternion = theInputSource._tmpQuaternion
+    //         torusKnot.parent = handMesh
+    //         torusKnot.position = Vector3.Zero()
+    //       }
+    //       else {
+    //         const newPos = new Vector3(torusKnot.absolutePosition.x, torusKnot.absolutePosition.y, torusKnot.absolutePosition.z);
+    //         const newRot = new Quaternion()
+    //         newRot.copyFrom(torusKnot.absoluteRotationQuaternion);
+    //         console.log("nexPos")
+    //         console.log(newPos)
+    //         console.log("newRot")
+    //         console.log(newRot)
+    //         torusKnot.parent = null;
+    //         torusKnot.setAbsolutePosition(newPos);
+    //         torusKnot.absoluteRotationQuaternion.copyFrom(newRot);
+    //       }
+    //       // console.log("torus position")
+    //       // console.log(torus_knot.position)
+    //       // console.log("torus rotation")
+    //       // console.log(torus_knot.absoluteRotationQuaternion)
+
+    //     } else if(torusKnot.material) {
+    //       torusKnot.material.diffuseColor = new Color3(0, 0, 1)
+    //     }
+
+
+    //   }
+    // }
   });
 
   // window.addEventListener("resize", () => {

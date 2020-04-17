@@ -1,9 +1,9 @@
 import { Scene, WebXRDefaultExperience, AnimatedInputBlockTypes, WebXRInputSource, ActionManager, ExecuteCodeAction } from "babylonjs";
-import { broadcastTriggerSqueezeEvent } from "./input-event-bus";
+import { broadcastInputEvent } from "./input-event-bus";
 import { get } from "lodash";
 import { Subject } from "rxjs";
 
-export const $handMeshesEventBus : Subject<any> = new Subject();
+export const $handMeshesEventBus: Subject<any> = new Subject();
 
 export class PlayerManager {
 
@@ -14,7 +14,7 @@ export class PlayerManager {
     private rightHand: WebXRInputSource = null as any;
     private leftHand: WebXRInputSource = null as any;
 
-    public init(xrHelper: WebXRDefaultExperience, scene: Scene){
+    public init(xrHelper: WebXRDefaultExperience, scene: Scene) {
         this.xrHelper = xrHelper;
 
         xrHelper.input.onControllerRemovedObservable.add((inputSource) => {
@@ -49,9 +49,12 @@ export class PlayerManager {
                     const component = motionController.getComponent(componentId);
 
                     component.onButtonStateChangedObservable.add((componentEvent) => {
-                        if (componentId === "xr-standard-trigger" || componentId === "xr-standard-squeeze") {
-                            broadcastTriggerSqueezeEvent(componentEvent)
-                        }
+                        broadcastInputEvent(
+                            {
+                                handedness : inputSource.inputSource.handedness,
+                                componentData : componentEvent
+                            }
+                        )
                     });
 
                     component.onAxisValueChangedObservable.add((values) => {
@@ -71,7 +74,7 @@ export class PlayerManager {
         });
     }
 
-    public subscribeToHandMeshes(callback){
+    public subscribeToHandMeshes(callback) {
         $handMeshesEventBus.subscribe(callback)
     }
 
