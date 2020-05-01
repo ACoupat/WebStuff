@@ -10,6 +10,7 @@ export class GrabbableObject {
     private isHoveredByHand: boolean = false;
     private currentHoveringHand: Mesh = null as any;
     private isGrabbed: boolean = false;
+    private currentGrabbingHandedness = null as any;
 
     public constructor(mesh: Mesh, scene) {
         this.mesh = mesh
@@ -44,15 +45,24 @@ export class GrabbableObject {
 
         subscribeToSqueezeEvent(
             event => {
-               console.log(event)
-                if (event.componentData.value && this.isHoveredByHand) {
-                    this.parentToHand()
-                }
-                else {
-                    this.unparentFromHand()
+                if (this.isGrabbed) {
+                    if (event.handedness === this.currentGrabbingHandedness && event.componentData.value <= 0) {
+                        this.unparentFromHand()
+                        this.currentGrabbingHandedness = null;
+                    }
+                } else {
+                    if (this.currentHoveringHandedness === event.handedness &&
+                        event.componentData.value > 0 && this.isHoveredByHand) {
+                        this.currentGrabbingHandedness = event.handedness;
+                        this.parentToHand()
+                    }
                 }
             }
         )
+    }
+
+    private get currentHoveringHandedness(){
+        return PlayerManager.getInstance().getHandedness(this.currentHoveringHand)
     }
 
     private parentToHand() {
@@ -62,7 +72,7 @@ export class GrabbableObject {
     }
 
     private unparentFromHand() {
-        const newPos : Vector3 = this.mesh.absolutePosition.clone();
+        const newPos: Vector3 = this.mesh.absolutePosition.clone();
         const newRot = this.mesh.absoluteRotationQuaternion
         this.mesh.parent = null;
         this.mesh.setAbsolutePosition(newPos);

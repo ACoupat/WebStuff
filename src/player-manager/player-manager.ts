@@ -1,4 +1,4 @@
-import { Scene, WebXRDefaultExperience, AnimatedInputBlockTypes, WebXRInputSource, ActionManager, ExecuteCodeAction } from "babylonjs";
+import { Scene, WebXRDefaultExperience, AnimatedInputBlockTypes, WebXRInputSource, ActionManager, ExecuteCodeAction, Mesh, AbstractMesh } from "babylonjs";
 import { broadcastInputEvent } from "./input-event-bus";
 import { get } from "lodash";
 import { Subject } from "rxjs";
@@ -29,30 +29,24 @@ export class PlayerManager {
 
         xrHelper.input.onControllerAddedObservable.add((inputSource) => {
 
-            console.log(inputSource)
             if (inputSource.inputSource.handedness === "left") {
                 this.leftHand = inputSource;
-                console.log("left hand ok")
             }
 
             if (inputSource.inputSource.handedness === "right") {
                 this.rightHand = inputSource;
-                console.log("right hand ok")
             }
 
             inputSource.onMotionControllerInitObservable.add((motionController) => {
-                console.log(motionController)
-
                 const componentsIds: string[] = motionController.getComponentIds();
                 componentsIds.map(componentId => {
 
                     const component = motionController.getComponent(componentId);
-
                     component.onButtonStateChangedObservable.add((componentEvent) => {
                         broadcastInputEvent(
                             {
-                                handedness : inputSource.inputSource.handedness,
-                                componentData : componentEvent
+                                handedness: inputSource.inputSource.handedness,
+                                componentData: componentEvent
                             }
                         )
                     });
@@ -79,7 +73,10 @@ export class PlayerManager {
     }
 
     public static getInstance() {
-        return this.instance || new PlayerManager();
+        if(!this.instance){
+        this.instance = new PlayerManager()
+        }
+        return this.instance
     }
 
     public get rightHandMesh() {
@@ -89,15 +86,25 @@ export class PlayerManager {
         return get(this.leftHand, 'motionController.rootMesh')
     }
 
+    public getHandedness(mesh: Mesh) : string | null{
+    if (this.leftHandMesh === mesh) {
+        return "left"
+    }
+    if (this.rightHandMesh === mesh) {
+        return "right"
+    }
+    return null;
+}
+
     public update() {
 
-        // Reduce log quantity
-        let counter = 0;
-        if (counter % 100 === 0) {
-            // console.log((this.leftHand ? "L - " : "") + (this.rightHand ? "R" : ""))
-        }
-
-
+    // Reduce log quantity
+    let counter = 0;
+    if (counter % 100 === 0) {
+        // console.log((this.leftHand ? "L - " : "") + (this.rightHand ? "R" : ""))
     }
+
+
+}
 
 }
