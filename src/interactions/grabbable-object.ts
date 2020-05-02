@@ -1,16 +1,16 @@
-import { AbstractMesh, ActionManager, ExecuteCodeAction, Mesh, Vector3 } from "babylonjs"
+import { AbstractMesh, ActionManager, ExecuteCodeAction, Mesh, Vector3, Quaternion } from "babylonjs"
 import { subscribeToSqueezeEvent } from "../player-manager/input-event-bus"
 import { PlayerManager, $handMeshesEventBus } from "../player-manager/player-manager"
 
 
 export class GrabbableObject {
 
-    private mesh: Mesh;
-
     private isHoveredByHand: boolean = false;
     private currentHoveringHand: Mesh = null as any;
-    private isGrabbed: boolean = false;
-    private currentGrabbingHandedness = null as any;
+
+    protected mesh: Mesh;
+    protected isGrabbed: boolean = false;
+    protected currentGrabbingHandedness = null as any;
 
     public constructor(mesh: Mesh, scene) {
         this.mesh = mesh
@@ -68,7 +68,9 @@ export class GrabbableObject {
     private parentToHand() {
         this.mesh.parent = this.currentHoveringHand;
         this.mesh.position = Vector3.Zero()
+        this.mesh.rotationQuaternion = Quaternion.Zero();
         this.isGrabbed = true;
+        this.onGrabStart()
     }
 
     private unparentFromHand() {
@@ -78,6 +80,16 @@ export class GrabbableObject {
         this.mesh.setAbsolutePosition(newPos);
         this.mesh.rotationQuaternion = newRot;
         this.isGrabbed = false;
+        this.onGrabEnd()
+    }
+
+    protected onGrabStart(){
+        //
+    }
+
+
+    protected onGrabEnd(){
+        //
     }
 
     private addIntersectionEvent(mesh1, mesh2, scene, eventType, callback) {

@@ -3,8 +3,9 @@ import './style.scss'
 import { Color3, Quaternion, Vector3, ArcRotateCamera, Engine, SceneLoader, MeshBuilder, StandardMaterial, CubeTexture, Texture, Mesh, AbstractMesh, Scene, DirectionalLight, Material } from 'babylonjs'
 import { PlayerManager } from './player-manager/player-manager';
 import { subscribeToSqueezeEvent } from './player-manager/input-event-bus';
-import { GrabbableObject } from './interactions/grabbable';
+import { GrabbableObject } from './interactions/grabbable-object';
 import 'babylonjs-loaders';
+import { Gun } from './interactions/gun';
 
 const canvas: HTMLCanvasElement = document.getElementById("canvas") as HTMLCanvasElement;
 const engine = new Engine(canvas, true);
@@ -48,8 +49,9 @@ SceneLoader.Load("", "assets/env3D.glb", engine, async (scene: Scene) => {
   yellowMat.specularColor = Color3.Yellow();
   torusClone.material = yellowMat
 
-  torusClone.position = new Vector3(1.78, 1.29, -1)
-  const torus2 = new GrabbableObject(torusClone, scene)
+  torusClone.position = new Vector3(1.50, 1.29, -1)
+  const gun = new Gun(scene)
+  gun.position = new Vector3(1.78, 1.29, -1)
 
   const light = new DirectionalLight("DirectionalLight", new Vector3(0, -1, 0), scene);
 
@@ -59,11 +61,10 @@ SceneLoader.Load("", "assets/env3D.glb", engine, async (scene: Scene) => {
   const ground: any = scene.getMeshByName("Ground");
   const grass: any = scene.getMeshByName("Grass");
   const xRParameters = ground && grass ? { floorMeshes: [ground, grass] } : {};
-  console.log(xRParameters)
   const xrHelper = await scene.createDefaultXRExperienceAsync(xRParameters);
-
+  scene.gravity = new Vector3(0, -9.81, 0);
   let playerManager: PlayerManager;
-
+  
   // Trying to set playerManager
   if (!xrHelper.baseExperience) {
     // tslint:disable-next-line: no-console
@@ -72,17 +73,17 @@ SceneLoader.Load("", "assets/env3D.glb", engine, async (scene: Scene) => {
     // all good, ready to go
     playerManager = PlayerManager.getInstance();
     playerManager.init(xrHelper, scene)
-
+    
     subscribeToSqueezeEvent(
       (event) => {
         console.log("trigger :)")
       }
-    )
-  }
-
-  let counter = 0;
-  engine.runRenderLoop(() => {
-    scene.render();
-    counter++;
+      )
+    }
+    
+    let counter = 0;
+    engine.runRenderLoop(() => {
+      scene.render();
+      counter++;
+    });
   });
-});

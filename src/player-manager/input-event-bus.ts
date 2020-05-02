@@ -2,7 +2,7 @@ import { Subject } from "rxjs"
 import { filter } from "rxjs/operators"
 import { WebXRControllerComponent } from "babylonjs";
 
-interface XRInputEvent{
+export interface XRInputEvent{
     componentData : WebXRControllerComponent
     handedness : XRHandedness
 }
@@ -18,6 +18,16 @@ export const subscribeToSqueezeEvent = (callback : (event : XRInputEvent) => any
     .pipe(filter(
         value => {
             return value.componentData.id === "xr-standard-squeeze"
+        }
+    ))
+    .subscribe(callback)
+}
+
+export const subscribeToTriggerEvent = (callback : (event : XRInputEvent) => any ) => {
+    $inputTriggerSqueezeEventBus
+    .pipe(filter(
+        value => {
+            return value.componentData.id === "xr-standard-trigger"
         }
     ))
     .subscribe(callback)
