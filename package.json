@@ -19,6 +19,7 @@
   "homepage": "https://github.com/DarkMowah/WebStuff#readme",
   "devDependencies": {
     "@types/lodash": "^4.14.149",
+    "@webpack-cli/serve": "^1.1.0",
     "css-loader": "^3.5.2",
     "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.13.1",

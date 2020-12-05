@@ -15,7 +15,9 @@ const theMotionControllers: any[] = []
 
 // here the doc for Load function: //doc.babylonjs.com/api/classes/babylon.sceneloader#load
 // SceneLoader.Load("", "3D_model/export/scene.babylon", engine, async (scene: Scene) => {
-SceneLoader.Load("", "assets/env3D.glb", engine, async (scene: Scene) => {
+  // SceneLoader.Load("", "assets/env3D.glb", engine, async (scene: Scene) => {
+// SceneLoader.Load("", "assets/workshop.glb", engine, async (scene: Scene) => {
+SceneLoader.Load("", "assets/the_house_that_jack_built.glb", engine, async (scene: Scene) => {
   scene.debugLayer.show();
 
   // as this .babylon example hasn't camera in it, we have to create one
@@ -58,9 +60,9 @@ SceneLoader.Load("", "assets/env3D.glb", engine, async (scene: Scene) => {
   torusKnot.position = new Vector3(1.29, 1.29, -1.54)
 
   scene.createDefaultEnvironment();
-  const ground: any = scene.getMeshByName("Ground");
+  const grounds: any[] = scene.meshes.filter( mesh => mesh.name.includes("Ground"));
   const grass: any = scene.getMeshByName("Grass");
-  const xRParameters = ground && grass ? { floorMeshes: [ground, grass] } : {};
+  const xRParameters = grounds || grass ? { floorMeshes: [...grounds, grass] } : {};
   const xrHelper = await scene.createDefaultXRExperienceAsync(xRParameters);
   scene.gravity = new Vector3(0, -9.81, 0);
   let playerManager: PlayerManager;
